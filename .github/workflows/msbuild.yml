@@ -31,8 +31,11 @@ jobs:
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} /p:OutDir=c:\buildout\ ${{env.SOLUTION_FILE_PATH}}
     
-    - name: Zipping build directory
-      run: powershell -ExecutionPolicy Bypass -Command "Compress-Archive -LiteralPath c:\buildout -DestinationPath c:\buildout.zip"
+    - name: Listing all files
+      run: dir *
+    
+    #- name: Zipping build directory
+    # run: powershell -ExecutionPolicy Bypass -Command "Compress-Archive -LiteralPath c:\buildout -DestinationPath c:\buildout.zip"
     
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
