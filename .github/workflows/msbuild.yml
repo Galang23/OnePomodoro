@@ -32,7 +32,7 @@ jobs:
       run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} /p:OutDir=c:\buildout\ ${{env.SOLUTION_FILE_PATH}}
     
     - name: Listing all files
-      run: dir *
+      run: powershell -ExecutionPolicy Bypass -Command "Get-ChildItem -Recurse"
     
     #- name: Zipping build directory
     # run: powershell -ExecutionPolicy Bypass -Command "Compress-Archive -LiteralPath c:\buildout -DestinationPath c:\buildout.zip"
