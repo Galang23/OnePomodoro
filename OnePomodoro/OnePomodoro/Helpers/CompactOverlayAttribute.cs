@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OnePomodoro.Helpers
 {
@@ -14,8 +10,7 @@ namespace OnePomodoro.Helpers
             CustomHeight = 150;
         }
 
-        public double CustomWidth { get; set; }
-
         public double CustomHeight { get; set; }
+        public double CustomWidth { get; set; }
     }
 }

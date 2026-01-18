@@ -1,22 +1,9 @@
-﻿using OnePomodoro.Helpers;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System;
 using System.Numerics;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI;
+using OnePomodoro.Helpers;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Hosting;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -33,10 +20,10 @@ namespace OnePomodoro.PomodoroViews
     public sealed partial class KonosubaView : PomodoroView
     {
         private readonly Compositor _compositor;
-        private readonly Visual _focusTopVisual;
-        private readonly Visual _relaxTopVisual;
         private readonly Visual _focusBottomVisual;
+        private readonly Visual _focusTopVisual;
         private readonly Visual _relaxBottomVisual;
+        private readonly Visual _relaxTopVisual;
 
         public KonosubaView()
         {
@@ -66,23 +53,13 @@ namespace OnePomodoro.PomodoroViews
             UpdateOffset();
         }
 
-        private void UpdateOffsetUsingAnimation()
+        private void StartOffsetAnimation(Visual visual, float offsetX)
         {
-            var width = (float)ContentArea.Width;
-            if (ViewModel.IsInPomodoro)
-            {
-                StartOffsetAnimation(_focusTopVisual, 0);
-                StartOffsetAnimation(_focusBottomVisual, 0);
-                StartOffsetAnimation(_relaxTopVisual, -2 * width);
-                StartOffsetAnimation(_relaxBottomVisual, 2 * width);
-            }
-            else
-            {
-                StartOffsetAnimation(_focusTopVisual, 2 * width);
-                StartOffsetAnimation(_focusBottomVisual, -2 * width);
-                StartOffsetAnimation(_relaxTopVisual, 0);
-                StartOffsetAnimation(_relaxBottomVisual, 0);
-            }
+            var springAnimation = _compositor.CreateSpringVector3Animation();
+            springAnimation.DampingRatio = 0.85f;
+            springAnimation.Period = TimeSpan.FromMilliseconds(50);
+            springAnimation.FinalValue = new Vector3(offsetX, 0, 0);
+            visual.StartAnimation(nameof(visual.Offset), springAnimation);
         }
 
         private void UpdateOffset()
@@ -104,13 +81,23 @@ namespace OnePomodoro.PomodoroViews
             }
         }
 
-        private void StartOffsetAnimation(Visual visual, float offsetX)
+        private void UpdateOffsetUsingAnimation()
         {
-            var springAnimation = _compositor.CreateSpringVector3Animation();
-            springAnimation.DampingRatio = 0.85f;
-            springAnimation.Period = TimeSpan.FromMilliseconds(50);
-            springAnimation.FinalValue = new Vector3(offsetX, 0, 0);
-            visual.StartAnimation(nameof(visual.Offset), springAnimation);
+            var width = (float)ContentArea.Width;
+            if (ViewModel.IsInPomodoro)
+            {
+                StartOffsetAnimation(_focusTopVisual, 0);
+                StartOffsetAnimation(_focusBottomVisual, 0);
+                StartOffsetAnimation(_relaxTopVisual, -2 * width);
+                StartOffsetAnimation(_relaxBottomVisual, 2 * width);
+            }
+            else
+            {
+                StartOffsetAnimation(_focusTopVisual, 2 * width);
+                StartOffsetAnimation(_focusBottomVisual, -2 * width);
+                StartOffsetAnimation(_relaxTopVisual, 0);
+                StartOffsetAnimation(_relaxBottomVisual, 0);
+            }
         }
     }
 }

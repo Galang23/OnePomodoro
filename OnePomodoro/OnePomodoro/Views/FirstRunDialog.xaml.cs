@@ -1,6 +1,6 @@
-﻿using OnePomodoro.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using OnePomodoro.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -18,14 +18,19 @@ namespace OnePomodoro.Views
             SizeChanged += OnSizeChanged;
         }
 
-        private void OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            UpdateBackgroundElement();
-        }
-
         private void OnBackgroundElementLoaded(object sender, RoutedEventArgs e)
         {
             _backgroundElement = sender as FrameworkElement;
+            UpdateBackgroundElement();
+        }
+
+        private void OnClose(object sender, RoutedEventArgs e)
+        {
+            Hide();
+        }
+
+        private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
             UpdateBackgroundElement();
         }
 
@@ -37,25 +42,17 @@ namespace OnePomodoro.Views
             _backgroundElement.Width = Math.Min(ActualWidth, 1440);
             _backgroundElement.Height = Math.Min(ActualHeight, 810);
         }
-
-        private void OnClose(object sender, RoutedEventArgs e)
-        {
-            Hide();
-        }
     }
 
     public class TeachItem
     {
-        public string Screenshot { get; set; }
-
         public string Description { get; set; }
-
+        public string Screenshot { get; set; }
         public string Title { get; set; }
     }
 
     public class TeachSource
     {
-
         /*
          * OnePomodoro是一个用于番茄工作法的计时器，这个计时器让你专注工作25分钟。
 
@@ -69,7 +66,6 @@ OnePomodoro提供了多种Pomodoro，让工作不那么无聊。
 
 About页面里提供了番茄钟做法的更多提示。
 
-
             OnePomodoro is a timer for Pomodoro Technique that lets you focus on work for 25 minutes.
 
 After 25 minutes of focusing (a Pomodoro), don't forget to take a 5-minute break and take a long break (15 minutes) after working 4 Pomodoros.
@@ -82,13 +78,14 @@ Most pomodoros offer Pinable mode, which means they can always on top.
 
 More tips on the Pomodoro Technique are available on the About page.
     */
+
         public TeachSource()
         {
             Items = new List<TeachItem>();
             Items.Add(new TeachItem
             {
                 Screenshot = "/Assets/Teach/teach1.png",
-                Description =ResourceExtensions.GetLocalized("Teach1Description"),
+                Description = ResourceExtensions.GetLocalized("Teach1Description"),
                 Title = ResourceExtensions.GetLocalized("Teach1Title"),
             });
             Items.Add(new TeachItem
@@ -121,7 +118,6 @@ More tips on the Pomodoro Technique are available on the About page.
                 Description = ResourceExtensions.GetLocalized("Teach6Description"),
                 Title = ResourceExtensions.GetLocalized("Teach6Title"),
             });
-
         }
 
         public List<TeachItem> Items { get; }

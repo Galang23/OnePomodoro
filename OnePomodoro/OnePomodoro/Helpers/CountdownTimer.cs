@@ -1,22 +1,15 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
-using Windows.System.Threading;
+﻿using System;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Windows.UI.Xaml;
+
 //https://docs.microsoft.com/zh-cn/windows/uwp/launch-resume/app-lifecycle
 namespace OnePomodoro.Helpers
 {
     public class CountdownTimer : ObservableObject
     {
-
         private DispatcherTimer _innerTimer;
-        private TimeSpan _totalTime;
         private TimeSpan _remainingTime;
+        private TimeSpan _totalTime;
 
         public CountdownTimer(DateTime startTime, TimeSpan totalTime)
         {
@@ -25,15 +18,11 @@ namespace OnePomodoro.Helpers
             _innerTimer = new DispatcherTimer();
             _innerTimer.Tick += OnInnerTimerTick;
             _innerTimer.Interval = TimeSpan.FromSeconds(0.1);
-
         }
 
-        public event EventHandler Finished;
         public event EventHandler Elapsed;
 
-        public TimeSpan TotalTime => _totalTime;
-
-        public DateTime StartTime { get; private set; }
+        public event EventHandler Finished;
 
         /// <summary>
         /// 获取或设置 RemainingInterval 的值
@@ -56,22 +45,8 @@ namespace OnePomodoro.Helpers
             }
         }
 
-        public void Start()
-        {
-            _innerTimer.Start();
-            CheckTime();
-        }
-
-        public void Stop()
-        {
-            _innerTimer.Stop();
-            Finished?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void OnInnerTimerTick(object sender, object e)
-        {
-            CheckTime();
-        }
+        public DateTime StartTime { get; private set; }
+        public TimeSpan TotalTime => _totalTime;
 
         public void CheckTime(bool updateRemainingTime = true)
         {
@@ -87,6 +62,23 @@ namespace OnePomodoro.Helpers
 
             if (remainingTime == TimeSpan.Zero)
                 Stop();
+        }
+
+        public void Start()
+        {
+            _innerTimer.Start();
+            CheckTime();
+        }
+
+        public void Stop()
+        {
+            _innerTimer.Stop();
+            Finished?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnInnerTimerTick(object sender, object e)
+        {
+            CheckTime();
         }
     }
 }

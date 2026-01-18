@@ -1,21 +1,9 @@
-﻿using OnePomodoro.Helpers;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System;
 using System.Numerics;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using OnePomodoro.Helpers;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Hosting;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 /// <summary>
@@ -31,9 +19,7 @@ namespace OnePomodoro.PomodoroViews
     [SourceCode("https://github.com/DinoChan/OnePomodoro/blob/master/OnePomodoro/OnePomodoro/PomodoroViews/EllipseClipView.xaml.cs")]
     public sealed partial class EllipseClipView : PomodoroView
     {
-        private Compositor Compositor => Window.Current.Compositor;
         private Visual _oldVisual;
-
 
         public EllipseClipView()
         {
@@ -41,6 +27,8 @@ namespace OnePomodoro.PomodoroViews
             ViewModel.IsInPomodoroChanged += OnIsPomodoroChanged;
             UpdateContent();
         }
+
+        private Compositor Compositor => Window.Current.Compositor;
 
         private void OnIsPomodoroChanged(object sender, EventArgs e)
         {
@@ -69,14 +57,12 @@ namespace OnePomodoro.PomodoroViews
                 animation.Duration = TimeSpan.FromSeconds(1);
                 animation.InsertKeyFrame(1, new Vector3(-width, 0, 0), easing);
 
-
                 CompositionScopedBatch batch = Compositor.CreateScopedBatch(CompositionBatchTypes.Animation);
 
                 _oldVisual.StartAnimation(nameof(Visual.Offset), animation);
 
                 batch.Completed += (s, e) => Root.Children.RemoveAt(0);
                 batch.End();
-
             }
 
             _oldVisual = visual;

@@ -1,13 +1,9 @@
-﻿using OnePomodoro.Helpers;
-using OnePomodoro.ViewModels;
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
+using OnePomodoro.ViewModels;
 using Windows.Storage;
-using Windows.System;
 using Windows.UI.Core;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
@@ -17,7 +13,7 @@ namespace OnePomodoro.Views
 {
     public sealed partial class OptionsPage : Page
     {
-        private OptionsViewModel ViewModel => DataContext as OptionsViewModel;
+        private Image _visualImage;
 
         public OptionsPage()
         {
@@ -26,10 +22,12 @@ namespace OnePomodoro.Views
             SystemNavigationManager.GetForCurrentView().BackRequested += BlankPage1_BackRequested;
         }
 
+        private OptionsViewModel ViewModel => DataContext as OptionsViewModel;
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-          
+
             _ = Task.Run(async () =>
               {
                   var uri = new Uri("ms-appx:///Assets/Privacy Statement.md");
@@ -63,27 +61,6 @@ namespace OnePomodoro.Views
               });
         }
 
-        private void BlankPage1_BackRequested(object sender, BackRequestedEventArgs e)
-        {
-            On_BackRequested();
-        }
-
-
-        private void OnBackClick(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            On_BackRequested();
-        }
-
-        private bool On_BackRequested()
-        {
-            if (this.Frame.CanGoBack)
-            {
-                this.Frame.GoBack();
-                return true;
-            }
-            return false;
-        }
-
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             if (e.NavigationMode == NavigationMode.Back)
@@ -103,7 +80,25 @@ namespace OnePomodoro.Views
             args.Handled = true;
         }
 
-        private Image _visualImage;
+        private void BlankPage1_BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            On_BackRequested();
+        }
+
+        private bool On_BackRequested()
+        {
+            if (this.Frame.CanGoBack)
+            {
+                this.Frame.GoBack();
+                return true;
+            }
+            return false;
+        }
+
+        private void OnBackClick(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            On_BackRequested();
+        }
 
         private void OnVisualChanged(object sender, Tuple<Type, Image> e)
         {

@@ -1,37 +1,27 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-using System;
+﻿using System;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace OnePomodoro.Models
 {
     public class PomodoroSettings : ObservableObject, IPomodoroSettings
     {
-        private string _viewType;
-        private bool _autoStartOfNextPomodoro;
         private bool _autoStartOfBreak;
-        private bool _isNotifyWhenPomodoroFinished;
+        private bool _autoStartOfNextPomodoro;
+        private string _breakAudioUri;
         private bool _isNotifyWhenBreakFinished;
+        private bool _isNotifyWhenPomodoroFinished;
+        private int _longBreakAfter;
+        private int _longBreakLength;
+        private string _pomodoroAudioUri;
         private int _pomodoroLength;
         private int _shortBreakLength;
-        private int _longBreakLength;
-        private int _longBreakAfter;
-        private string _pomodoroAudioUri;
-        private string _breakAudioUri;
+        private string _viewType;
 
         public PomodoroSettings()
         {
         }
 
         public event EventHandler ViewTypeChanged;
-
-        public bool AutoStartOfNextPomodoro
-        {
-            get { return _autoStartOfNextPomodoro; }
-            set
-            {
-                _autoStartOfNextPomodoro = value;
-                OnPropertyChanged();
-            }
-        }
 
         public bool AutoStartOfBreak
         {
@@ -43,12 +33,25 @@ namespace OnePomodoro.Models
             }
         }
 
-        public bool IsNotifyWhenPomodoroFinished
+        public bool AutoStartOfNextPomodoro
         {
-            get { return _isNotifyWhenPomodoroFinished; }
+            get { return _autoStartOfNextPomodoro; }
             set
             {
-                _isNotifyWhenPomodoroFinished = value;
+                _autoStartOfNextPomodoro = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string BreakAudioUri
+        {
+            get
+            {
+                return _breakAudioUri;
+            }
+            set
+            {
+                _breakAudioUri = value;
                 OnPropertyChanged();
             }
         }
@@ -63,37 +66,16 @@ namespace OnePomodoro.Models
             }
         }
 
-        public int PomodoroLength
+        public bool IsNotifyWhenPomodoroFinished
         {
-            get { return _pomodoroLength; }
+            get { return _isNotifyWhenPomodoroFinished; }
             set
             {
-                _pomodoroLength = value;
+                _isNotifyWhenPomodoroFinished = value;
                 OnPropertyChanged();
             }
         }
-        public int ShortBreakLength
-        {
-            get
-            {
-                return _shortBreakLength;
-            }
 
-            set
-            {
-                _shortBreakLength = value;
-                OnPropertyChanged();
-            }
-        }
-        public int LongBreakLength
-        {
-            get { return _longBreakLength; }
-            set
-            {
-                _longBreakLength = value;
-                OnPropertyChanged();
-            }
-        }
         public int LongBreakAfter
         {
             get { return _longBreakAfter; }
@@ -104,16 +86,13 @@ namespace OnePomodoro.Models
             }
         }
 
-        public string ViewType
+        public int LongBreakLength
         {
-            get { return _viewType; }
+            get { return _longBreakLength; }
             set
             {
-                if (_viewType == value)
-                    return;
-
-                _viewType = value;
-                ViewTypeChanged?.Invoke(this, EventArgs.Empty);
+                _longBreakLength = value;
+                OnPropertyChanged();
             }
         }
 
@@ -130,16 +109,40 @@ namespace OnePomodoro.Models
             }
         }
 
-        public string BreakAudioUri
+        public int PomodoroLength
+        {
+            get { return _pomodoroLength; }
+            set
+            {
+                _pomodoroLength = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ShortBreakLength
         {
             get
             {
-                return _breakAudioUri;
+                return _shortBreakLength;
             }
+
             set
             {
-                _breakAudioUri = value;
+                _shortBreakLength = value;
                 OnPropertyChanged();
+            }
+        }
+
+        public string ViewType
+        {
+            get { return _viewType; }
+            set
+            {
+                if (_viewType == value)
+                    return;
+
+                _viewType = value;
+                ViewTypeChanged?.Invoke(this, EventArgs.Empty);
             }
         }
     }

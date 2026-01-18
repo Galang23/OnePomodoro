@@ -18,12 +18,18 @@ namespace OnePomodoro.ViewModels
         public GeneralSettingsViewModel()
         {
             Settings = SettingsService.Current;
-            (Settings as INotifyPropertyChanged).PropertyChanged += OnPropertyChanged;
+            if (Settings != null)
+                (Settings as INotifyPropertyChanged).PropertyChanged += OnPropertyChanged;
+
             if (DesignMode.DesignMode2Enabled == false)
                 _toastNotificationsService = App.Current.Services.GetService<ToastNotificationsService>();
 
             Audios = AudioDefinitions.Definitions;
         }
+
+        public IEnumerable<AudioDefinition> Audios { get; }
+
+        public IPomodoroSettings Settings { get; }
 
         private async void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -38,7 +44,7 @@ namespace OnePomodoro.ViewModels
                 }
                 else
                 {
-                  await  NotificationManager.Current.RemovePomodoroFinishedToastNotificationScheduleAsync();
+                    await NotificationManager.Current.RemovePomodoroFinishedToastNotificationScheduleAsync();
                 }
 
                 if (Settings.IsNotifyWhenBreakFinished)
@@ -48,7 +54,7 @@ namespace OnePomodoro.ViewModels
                 }
                 else
                 {
-                  await  NotificationManager.Current.RemoveBreakFinishedToastNotificationScheduleAsync();
+                    await NotificationManager.Current.RemoveBreakFinishedToastNotificationScheduleAsync();
                 }
 
                 if (e.PropertyName == nameof(IPomodoroSettings.PomodoroAudioUri))
@@ -67,9 +73,5 @@ namespace OnePomodoro.ViewModels
                 Microsoft.AppCenter.Crashes.Crashes.TrackError(ex);
             }
         }
-
-        public IEnumerable<AudioDefinition> Audios { get; }
-
-        public IPomodoroSettings Settings { get; }
     }
 }

@@ -1,16 +1,17 @@
-﻿using Microsoft.Toolkit.Uwp.UI.Controls;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Storage;
+﻿using System;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 using Windows.UI.Xaml;
 
 namespace OnePomodoro.Helpers
 {
     public class MarkdownTextBlockExtensions
     {
+        /// <summary>
+        /// 标识 FileUri 依赖项属性。
+        /// </summary>
+        public static readonly DependencyProperty FileUriProperty =
+            DependencyProperty.RegisterAttached("FileUri", typeof(Uri), typeof(MarkdownTextBlockExtensions), new PropertyMetadata(default(Uri), OnFileUriChanged));
+
         /// <summary>
         /// 从指定元素获取 FileUri 依赖项属性的值。
         /// </summary>
@@ -25,13 +26,7 @@ namespace OnePomodoro.Helpers
         /// <param name="value">要设置的值。</param>
         public static void SetFileUri(DependencyObject obj, Uri value) => obj.SetValue(FileUriProperty, value);
 
-        /// <summary>
-        /// 标识 FileUri 依赖项属性。
-        /// </summary>
-        public static readonly DependencyProperty FileUriProperty =
-            DependencyProperty.RegisterAttached("FileUri", typeof(Uri), typeof(MarkdownTextBlockExtensions), new PropertyMetadata(default(Uri), OnFileUriChanged));
-
-        private  static void OnFileUriChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        private static void OnFileUriChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             var oldValue = (Uri)args.OldValue;
             var newValue = (Uri)args.NewValue;

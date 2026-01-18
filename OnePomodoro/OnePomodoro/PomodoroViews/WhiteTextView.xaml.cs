@@ -1,33 +1,10 @@
-﻿using Microsoft.Graphics.Canvas;
-using Microsoft.Graphics.Canvas.Effects;
-using Microsoft.Graphics.Canvas.Geometry;
-using Microsoft.Graphics.Canvas.Text;
-using Microsoft.Graphics.Canvas.UI.Composition;
+﻿using System;
+using System.Numerics;
 using Microsoft.Toolkit.Uwp.UI;
 using OnePomodoro.Helpers;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Numerics;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Graphics.DirectX;
-using Windows.Networking.BackgroundTransfer;
 using Windows.UI;
 using Windows.UI.Composition;
-using Windows.UI.Text;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Hosting;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -40,12 +17,10 @@ namespace OnePomodoro.PomodoroViews
     [SourceCode("https://github.com/DinoChan/OnePomodoro/blob/master/OnePomodoro/OnePomodoro/PomodoroViews/WhiteTextView.xaml.cs")]
     public sealed partial class WhiteTextView : PomodoroView
     {
-        private PointLight _redLight;
-        private PointLight _blueLight;
-
-        private Color _redColor = Color.FromArgb(255, 217, 17, 83);
         private Color _blueColor = Color.FromArgb(255, 0, 27, 171);
-
+        private PointLight _blueLight;
+        private Color _redColor = Color.FromArgb(255, 217, 17, 83);
+        private PointLight _redLight;
 
         public WhiteTextView()
         {
@@ -53,30 +28,6 @@ namespace OnePomodoro.PomodoroViews
             OnIsInPomodoroChanged();
             Loaded += OnLoaded;
             ViewModel.IsInPomodoroChanged += (s, e) => OnIsInPomodoroChanged();
-        }
-
-        private void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= OnLoaded;
-            ShowTextShimmingAsync();
-            OnIsInPomodoroChanged();
-        }
-
-        private void OnIsInPomodoroChanged()
-        {
-            FocusPanel.Visibility = ViewModel.IsInPomodoro ? Visibility.Visible : Visibility.Collapsed;
-            RelaxPanel.Visibility = ViewModel.IsInPomodoro ? Visibility.Collapsed : Visibility.Visible;
-        }
-        
-
-        private void ShowTextShimmingAsync()
-        {
-            _redLight = CreatePointLightAndStartAnimation(_redColor, TimeSpan.Zero);
-            _blueLight = CreatePointLightAndStartAnimation(_blueColor, TimeSpan.FromSeconds(0.5));
-            var backgroundVisual = VisualExtensions.GetVisual(BackgroundElement);
-
-            _redLight.Targets.Add(backgroundVisual);
-            _blueLight.Targets.Add(backgroundVisual);
         }
 
         private PointLight CreatePointLightAndStartAnimation(Color color, TimeSpan delay)
@@ -101,6 +52,27 @@ namespace OnePomodoro.PomodoroViews
             return pointLight;
         }
 
-    }
+        private void OnIsInPomodoroChanged()
+        {
+            FocusPanel.Visibility = ViewModel.IsInPomodoro ? Visibility.Visible : Visibility.Collapsed;
+            RelaxPanel.Visibility = ViewModel.IsInPomodoro ? Visibility.Collapsed : Visibility.Visible;
+        }
 
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= OnLoaded;
+            ShowTextShimmingAsync();
+            OnIsInPomodoroChanged();
+        }
+
+        private void ShowTextShimmingAsync()
+        {
+            _redLight = CreatePointLightAndStartAnimation(_redColor, TimeSpan.Zero);
+            _blueLight = CreatePointLightAndStartAnimation(_blueColor, TimeSpan.FromSeconds(0.5));
+            var backgroundVisual = VisualExtensions.GetVisual(BackgroundElement);
+
+            _redLight.Targets.Add(backgroundVisual);
+            _blueLight.Targets.Add(backgroundVisual);
+        }
+    }
 }
